@@ -19,7 +19,9 @@
 
 from HTMLParser import HTMLParser
 
+import calendar
 import feedparser
+import os
 import re
 import requests
 import time
@@ -219,8 +221,30 @@ class RecapUpload(object):
         if need_fake_case or need_fake_entry:
             # Either because of the case docket or the docket entry's absence
             # we must fake up a docket.
-            date = time.strftime('%m/%d/%Y',
-                                 feedparser._parse_date(published_date))
+
+            # Unfortunately, feedparser returns a UTC tuple, and we
+            # want to submit this in the Court's local time, which
+            # guess at. So we convert back to epoch form and call
+            # localtime. Worse, we can only control the local zone by
+            # frobbing the environment.  Fortunately, we only care
+            # about the date, not the time, so the window where this
+            # matters is 3 hours for the continental US, although a
+            # bit further from Guam to USVI.  We choose US/Pacific as
+            # our zone because it is Less Wrong, and because filing at
+            # 10pm Pacific is more likely than 1am Eastern.
+
+            gmtime = feedparser._parse_date(published_date)
+            oldtz = os.environ.get('TZ')
+            os.environ['TZ'] = 'US/Pacific'
+            time.tzset()
+            localtime = time.localtime(calendar.timegm(gmtime))
+            date = time.strftime('%m/%d/%Y', localtime)
+            if oldtz:
+                os.environ['TZ'] = oldtz
+            else:
+                del os.environ['TZ']
+            time.tzset()
+
             html = ''
             html += '<h3>THIS IS A FAKED UP DOCKET VIA RSS THROUGH '
             html += 'recapupload.py<br>\n'
