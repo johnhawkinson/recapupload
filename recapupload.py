@@ -108,7 +108,7 @@ class RecapUpload(object):
 # docs1/01207988480'>Document</a>)
 
         match = re.search(r'''(?xs)
-            \[(?P<text>[^\]]*)\]
+            \[(?P<text>.*)\]
             .*?
             <a\ href=(?P<q1>["'])(?P<url>.*?)(?P=q1)\s*>
             (?P<anchor>.*?)
