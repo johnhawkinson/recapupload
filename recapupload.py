@@ -107,7 +107,7 @@ class RecapUpload(object):
 # [Order Filed (CLERK)] (<a href='https://ecf.cadc.uscourts.gov/
 # docs1/01207988480'>Document</a>)
 
-        match = re.search(r'''(?x)
+        match = re.search(r'''(?xs)
             \[(?P<text>[^\]]*)\]
             .*?
             <a\ href=(?P<q1>["'])(?P<url>.*?)(?P=q1)\s*>
