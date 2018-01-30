@@ -88,6 +88,8 @@ class RecapUpload(object):
 
         if not len(settings.recap_token) >= 40:
             # Not a valid token
+            if VERBOSE > 0:
+                print "Not a valid authentication token."
             return None
 
         # #1. We first parse the item_description to get the docket text,
@@ -113,6 +115,8 @@ class RecapUpload(object):
             </a>
         ''', itemDecoded)
         if match is None:
+            if VERBOSE > 0:
+                print "Failed to parse item description."
             return None
 
         text = match.group('text')
