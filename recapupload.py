@@ -30,6 +30,8 @@ from bigcases_settings import settings
 
 API_BASE = 'https://www.courtlistener.com/api/rest/v3/'
 TIMEOUTS = (60, 300)  # 1 minute connect timeout, 5 min. read timeout
+
+TESTING = False	      # Server throws away content in "debug" mode
 VERBOSE = 1
 
 
@@ -244,7 +246,7 @@ class RecapUpload(object):
                     'upload_type': _UploadType.DOCKET,
                     'court': court,
                     'pacer_case_id': pacer_case_id,
-                    'debug': 'false',  # Server throws away in debug mode
+                    'debug': TESTING,  # Server throws away in debug mode
                 },
                 files=files,
                 timeout=TIMEOUTS,
@@ -267,7 +269,7 @@ class RecapUpload(object):
                 'pacer_case_id': pacer_case_id,
                 'pacer_doc_id': pacer_doc_id,
                 'document_number': entry_number,
-                'debug': 'false',  # Server throws away in debug mode
+                'debug': TESTING,  # Server throws away in debug mode
             },
             files=files,
             timeout=TIMEOUTS,
